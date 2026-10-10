@@ -1,0 +1,77 @@
+{% extends 'publisher/base.html' %} {% load static %} {% block title %}Send
+Feedback | BookApp{% endblock %} {% block content %}
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-2xl mx-auto">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <!-- Header -->
+      <div class="bg-primary text-white px-6 py-4">
+        <h1 class="text-2xl font-bold text-center">Send Feedback</h1>
+      </div>
+
+      <!-- Content -->
+      <div class="p-6">
+        <div class="mb-6">
+          <h2 class="text-xl font-semibold text-gray-800 mb-2">
+            Share Your Thoughts
+          </h2>
+          <p class="text-gray-600">
+            We value your feedback! Help us improve by sharing your experience,
+            suggestions, or reporting any issues you've encountered.
+          </p>
+        </div>
+
+        <form method="post" class="space-y-4">
+          {% csrf_token %}
+
+          <div>
+            <label
+              for="subject"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Subject</label
+            >
+            <input
+              type="text"
+              name="subject"
+              id="subject"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+              placeholder="Brief summary of your feedback"
+            />
+          </div>
+
+          <div>
+            <label
+              for="message"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Message</label
+            >
+            <textarea
+              name="message"
+              id="message"
+              rows="6"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+              placeholder="Please provide detailed feedback..."
+            ></textarea>
+          </div>
+
+          <div class="flex justify-end space-x-4">
+            <a
+              href="{% url 'publisher' %}"
+              class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+            >
+              Cancel
+            </a>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+            >
+              Send Feedback
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

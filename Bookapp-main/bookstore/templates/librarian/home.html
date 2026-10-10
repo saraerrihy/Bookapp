@@ -1,0 +1,168 @@
+{% extends 'librarian/base.html' %} {% load static %} {% block title %}Library
+Dashboard{% endblock %} {% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <!-- Breadcrumbs -->
+  <nav class="flex" aria-label="Breadcrumb">
+    <ol class="flex items-center space-x-2">
+      <li>
+        <div class="flex items-center">
+          <i class="fas fa-tachometer-alt text-gray-400 mr-2"></i>
+          <span class="text-gray-500">Dashboard Overview</span>
+        </div>
+      </li>
+    </ol>
+  </nav>
+
+  <!-- Stats Cards -->
+  <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <!-- Books Card -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-1">
+            <p class="text-sm font-medium text-green-600 truncate">
+              Total Books
+            </p>
+            <p class="mt-1 text-3xl font-semibold text-gray-900">{{ book }}</p>
+          </div>
+          <div class="ml-5">
+            <i class="fas fa-book text-3xl text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+      <div class="bg-green-50 px-5 py-3">
+        <a
+          href="{% url 'lmbook' %}"
+          class="text-sm font-medium text-green-600 hover:text-green-500 flex items-center justify-center"
+        >
+          View All Books
+          <i class="fas fa-arrow-circle-right ml-2"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Users Card -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-1">
+            <p class="text-sm font-medium text-yellow-600 truncate">
+              Registered Users
+            </p>
+            <p class="mt-1 text-3xl font-semibold text-gray-900">{{ user }}</p>
+          </div>
+          <div class="ml-5">
+            <i class="fas fa-users text-3xl text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+      <div class="bg-yellow-50 px-5 py-3">
+        <a
+          href="#"
+          class="text-sm font-medium text-yellow-600 hover:text-yellow-500 flex items-center justify-center"
+        >
+          Manage Users
+          <i class="fas fa-arrow-circle-right ml-2"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Available Copies Card -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-1">
+            <p class="text-sm font-medium text-blue-600 truncate">
+              Available Copies
+            </p>
+            <p class="mt-1 text-3xl font-semibold text-gray-900">
+              {{ available_copies }}
+            </p>
+          </div>
+          <div class="ml-5">
+            <i class="fas fa-clone text-3xl text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+      <div class="bg-blue-50 px-5 py-3">
+        <a
+          href="#"
+          class="text-sm font-medium text-blue-600 hover:text-blue-500 flex items-center justify-center"
+        >
+          View Inventory
+          <i class="fas fa-arrow-circle-right ml-2"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Checked Out Card -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-1">
+            <p class="text-sm font-medium text-indigo-600 truncate">
+              Checked Out
+            </p>
+            <p class="mt-1 text-3xl font-semibold text-gray-900">
+              {{ checked_out }}
+            </p>
+          </div>
+          <div class="ml-5">
+            <i class="fas fa-exchange-alt text-3xl text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+      <div class="bg-indigo-50 px-5 py-3">
+        <a
+          href="#"
+          class="text-sm font-medium text-indigo-600 hover:text-indigo-500 flex items-center justify-center"
+        >
+          View Transactions
+          <i class="fas fa-arrow-circle-right ml-2"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity Section -->
+  <div class="mt-8">
+    <div class="bg-white shadow rounded-lg">
+      <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+        <h3
+          class="text-lg leading-6 font-medium text-gray-900 flex items-center"
+        >
+          <i class="fas fa-history text-primary mr-2"></i>
+          Recent Activity
+        </h3>
+        <div class="relative">
+          <button
+            type="button"
+            class="text-gray-400 hover:text-gray-500 focus:outline-none"
+          >
+            <i class="fas fa-ellipsis-v"></i>
+          </button>
+        </div>
+      </div>
+      <div class="border-t border-gray-200">
+        <div class="px-4 py-5 sm:p-6 text-center">
+          <i class="fas fa-info-circle text-3xl text-gray-300 mb-3"></i>
+          <p class="text-gray-500">
+            Recent library activities will appear here
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block javascripts %} {{ block.super }}
+<script>
+  // Refresh stats every 60 seconds
+  setInterval(function () {
+    fetch(window.location.href)
+      .then((response) => response.text())
+      .then((html) => {
+        // Update stats cards here if needed
+      });
+  }, 60000);
+</script>
+{% endblock %}

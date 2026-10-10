@@ -1,0 +1,170 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}{% if request.path == '/new' %}Add New Book{% else %}Edit Book{% endif %} - BookApp{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div id="content-wrapper">
+                <div class="container-fluid">
+                    <!-- Breadcrumb Navigation -->
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb bg-light p-2 rounded">
+                            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}"><i class="fas fa-home mr-1"></i> Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'ambook' %}"><i class="fas fa-book mr-1"></i> Manage Books</a></li>
+                            <li class="breadcrumb-item active">
+                                <i class="fas {% if request.path == '/new' %}fa-plus-circle{% else %}fa-edit{% endif %} mr-1"></i>
+                                {% if request.path == '/new' %}Add New Book{% else %}Edit {{ object.title }}{% endif %}
+                            </li>
+                        </ol>
+                    </nav>
+
+                    <!-- Main Card -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                            <h5 class="m-0 font-weight-bold text-primary">
+                                <i class="fas {% if request.path == '/new' %}fa-plus-circle{% else %}fa-edit{% endif %} mr-2"></i>
+                                {% if request.path == '/new' %}Add New Book{% else %}Edit Book Details{% endif %}
+                            </h5>
+                            {% if not request.path == '/new' %}
+                            <a href="{% url 'ambook' %}" class="btn btn-sm btn-secondary">
+                                <i class="fas fa-arrow-left mr-1"></i> Back to List
+                            </a>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="card-body">
+                            <!-- System Messages -->
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            {% endfor %}
+
+                            <!-- Book Form -->
+                            <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                                {% csrf_token %}
+                                <div class="row">
+                                    {% for field in form %}
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group">
+                                            <label for="{{ field.id_for_label }}" class="font-weight-bold">
+                                                {{ field.label }}
+                                                {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                                            </label>
+                                            
+                                            {% if field.name == 'cover' or field.name == 'pdf' %}
+                                                <div class="custom-file">
+                                                    {{ field }}
+                                                    <label class="custom-file-label" for="{{ field.id_for_label }}">
+                                                        Choose file...
+                                                    </label>
+                                                </div>
+                                            {% else %}
+                                                {{ field }}
+                                            {% endif %}
+                                            
+                                            {% if field.help_text %}
+                                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                                            {% endif %}
+                                            
+                                            {% for error in field.errors %}
+                                                <div class="invalid-feedback d-block">
+                                                    {{ error }}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="form-group mt-4">
+                                    <div class="d-flex justify-content-between">
+                                        <button type="submit" class="btn btn-primary px-4">
+                                            <i class="fas {% if request.path == '/new' %}fa-save{% else %}fa-sync-alt{% endif %} mr-2"></i>
+                                            {% if request.path == '/new' %}Add Book{% else %}Update Book{% endif %}
+                                        </button>
+                                        <a href="{% url 'ambook' %}" class="btn btn-secondary px-4">
+                                            <i class="fas fa-times mr-2"></i> Cancel
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+    }
+    
+    .breadcrumb {
+        padding: 0.5rem 1rem;
+    }
+    
+    .form-control, .custom-file-input {
+        border-radius: 0.35rem;
+    }
+    
+    .form-control:focus, .custom-file-input:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    }
+    
+    .custom-file-label::after {
+        content: "Browse";
+        background-color: #e9ecef;
+        color: #495057;
+    }
+    
+    .btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+    
+    .btn-primary:hover {
+        background-color: #2e59d9;
+        border-color: #2e59d9;
+    }
+</style>
+
+<script>
+// Show filename in file input
+document.querySelectorAll('.custom-file-input').forEach(function(input) {
+    input.addEventListener('change', function(e) {
+        var fileName = e.target.files[0].name;
+        var nextSibling = e.target.nextElementSibling;
+        nextSibling.innerText = fileName;
+    });
+});
+
+// Form validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+</script>
+{% endblock %}

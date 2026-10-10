@@ -1,0 +1,120 @@
+{% extends 'publisher/base.html' %} {% load static %} {% block title %}BookApp
+Group Chat{% endblock %} {% block content %}
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-3xl mx-auto">
+    <!-- Main Chat Container -->
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <!-- Chat Header -->
+      <div class="bg-gray-800 text-white px-6 py-4">
+        <h4 class="text-xl font-semibold text-center">
+          <i class="fas fa-comments mr-2"></i>BookApp Group Chat
+        </h4>
+      </div>
+
+      <!-- Chat Messages -->
+      <div class="chat-messages p-4 h-96 overflow-y-auto bg-gray-50">
+        {% for message in chat_messages %}
+        <div
+          class="mb-4 {% if message.user == request.user %}text-right{% endif %}"
+        >
+          <div
+            class="flex {% if message.user == request.user %}justify-end{% endif %}"
+          >
+            <div
+              class="{% if message.user == request.user %}bg-primary text-white{% else %}bg-white text-gray-800{% endif %} p-3 rounded-lg shadow-sm max-w-[70%]"
+            >
+              <div class="flex justify-between items-center mb-1">
+                <strong class="flex items-center">
+                  {% if message.user.is_superuser %}
+                  <i class="fas fa-shield-alt text-green-400 mr-1"></i>
+                  {% elif message.user.is_staff %}
+                  <i class="fas fa-user-tie text-blue-400 mr-1"></i>
+                  {% else %}
+                  <i class="fas fa-user mr-1"></i>
+                  {% endif %} {{ message.user.username }}
+                </strong>
+                <small
+                  class="{% if message.user == request.user %}text-white/70{% else %}text-gray-500{% endif %} text-xs"
+                >
+                  {{ message.posted_at|timesince }} ago
+                </small>
+              </div>
+              <p class="mb-0 break-words">{{ message.message }}</p>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="text-center py-12 bg-white rounded-lg shadow-sm">
+          <i class="fas fa-comment-slash text-4xl text-gray-400 mb-3"></i>
+          <h4 class="text-xl font-medium text-gray-600 mb-2">
+            No Messages Yet
+          </h4>
+          <p class="text-gray-500">Be the first to start the conversation!</p>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Message Form -->
+      <div class="p-4 border-t border-gray-200">
+        <form method="POST" class="message-form">
+          {% csrf_token %}
+          <div class="flex">
+            <textarea
+              name="message"
+              class="flex-1 p-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+              placeholder="Type your message here..."
+              rows="2"
+              required
+            ></textarea>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-primary text-white rounded-r-lg hover:bg-primary/90 transition-colors flex items-center"
+            >
+              <i class="fas fa-paper-plane mr-2"></i> Send
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .chat-messages {
+    scrollbar-width: thin;
+    scrollbar-color: #9ca3af #f3f4f6;
+  }
+
+  .chat-messages::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .chat-messages::-webkit-scrollbar-track {
+    background: #f3f4f6;
+  }
+
+  .chat-messages::-webkit-scrollbar-thumb {
+    background-color: #9ca3af;
+    border-radius: 3px;
+  }
+</style>
+{% endblock %} {% block scripts %} {{ block.super }}
+<script>
+  // Auto-scroll to bottom of chat
+  const messagesContainer = document.querySelector(".chat-messages");
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+  // Auto-refresh messages every 5 seconds
+  setInterval(function () {
+    fetch(window.location.href)
+      .then((response) => response.text())
+      .then((html) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const newMessages = doc.querySelector(".chat-messages").innerHTML;
+        document.querySelector(".chat-messages").innerHTML = newMessages;
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      });
+  }, 5000);
+</script>
+{% endblock %}

@@ -1,0 +1,217 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-xl-8 col-lg-10">
+            <div id="content" class="p-4 p-md-5 pt-4">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="m-0">
+                            <i class="fas fa-book mr-2"></i>Ajouter un nouveau livre
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="{% url 'aabook' %}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                            {% csrf_token %}
+                            
+                            <div class="form-row mb-4">
+                                <div class="col-md-12 mb-3">
+                                    <label for="title" class="font-weight-bold">Titre du livre</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text bg-primary text-white">
+                                                <i class="fas fa-heading"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" id="title" name="title" placeholder="Titre du livre" required>
+                                        <div class="invalid-feedback">
+                                            Veuillez saisir le titre du livre.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row mb-4">
+                                <div class="col-md-6 mb-3">
+                                    <label for="author" class="font-weight-bold">Auteur</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text bg-primary text-white">
+                                                <i class="fas fa-user-edit"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" id="author" name="author" placeholder="Auteur" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="publisher" class="font-weight-bold">Éditeur</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text bg-primary text-white">
+                                                <i class="fas fa-building"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" id="publisher" name="publisher" placeholder="Éditeur" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row mb-4">
+                                <div class="col-md-6 mb-3">
+                                    <label for="year" class="font-weight-bold">Année de publication</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text bg-primary text-white">
+                                                <i class="fas fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" id="year" name="year" placeholder="Année de publication" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label for="desc" class="font-weight-bold">Description</label>
+                                <textarea class="form-control" id="desc" name="desc" rows="4" placeholder="Description du livre" required></textarea>
+                            </div>
+
+                            <div class="form-row mb-4">
+                                <div class="col-md-6 mb-3">
+                                    <label for="cover" class="font-weight-bold">Couverture du livre</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="cover" name="cover" required>
+                                        <label class="custom-file-label" for="cover">Choisir une image...</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="pdf" class="font-weight-bold">Fichier PDF</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="pdf" name="pdf" required>
+                                        <label class="custom-file-label" for="pdf">Choisir un fichier PDF...</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mt-5">
+                                <button type="submit" class="btn btn-primary btn-lg btn-block shadow-sm">
+                                    <i class="fas fa-plus-circle mr-2"></i>Ajouter le livre
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Script pour afficher le nom des fichiers sélectionnés
+document.querySelector('.custom-file-input').addEventListener('change', function(e) {
+    var fileName = document.getElementById("cover").files[0].name;
+    var nextSibling = e.target.nextElementSibling;
+    nextSibling.innerText = fileName;
+});
+
+document.querySelectorAll('.custom-file-input').forEach(function(input) {
+    input.addEventListener('change', function(e) {
+        var fileName = e.target.files[0].name;
+        var nextSibling = e.target.nextElementSibling;
+        nextSibling.innerText = fileName;
+    });
+});
+
+// Validation du formulaire
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+</script>
+
+<style>
+.card {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.card-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.custom-file-label::after {
+    content: "Parcourir";
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+.btn-primary {
+    background-color: #4e73df;
+    border-color: #4e73df;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #2e59d9;
+    border-color: #2e59d9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-control, .custom-select {
+    border-radius: 0.35rem;
+    border: 1px solid #d1d3e2;
+}
+
+.form-control:focus, .custom-select:focus {
+    border-color: #bac8f3;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+.input-group-text {
+    background-color: #4e73df;
+    color: white;
+    border: none;
+}
+
+.invalid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 80%;
+    color: #e74a3b;
+}
+
+.was-validated .form-control:invalid, 
+.was-validated .custom-select:invalid,
+.form-control.is-invalid, 
+.custom-select.is-invalid {
+    border-color: #e74a3b;
+}
+
+.was-validated .form-control:invalid ~ .invalid-feedback,
+.was-validated .form-control:invalid ~ .invalid-tooltip,
+.form-control.is-invalid ~ .invalid-feedback,
+.form-control.is-invalid ~ .invalid-tooltip,
+.custom-select.is-invalid ~ .invalid-feedback,
+.custom-select.is-invalid ~ .invalid-tooltip {
+    display: block;
+}
+</style>
+
+{% endblock %}

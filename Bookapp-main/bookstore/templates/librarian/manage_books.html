@@ -1,0 +1,161 @@
+{% extends 'librarian/base.html' %} {% load static %} {% block title %}Manage
+Books | BookApp{% endblock %} {% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="bg-white shadow rounded-lg overflow-hidden">
+    <div class="px-4 py-5 sm:px-6 bg-primary">
+      <div class="flex items-center">
+        <i class="fas fa-table text-white mr-2"></i>
+        <h3 class="text-lg font-medium text-white">Manage Books</h3>
+      </div>
+    </div>
+
+    <div class="px-4 py-5 sm:p-6">
+      <!-- Messages -->
+      {% for message in messages %}
+      <div
+        class="mb-4 p-4 rounded-md {% if message.tags == 'success' %}bg-green-50 text-green-700{% elif message.tags == 'error' %}bg-red-50 text-red-700{% else %}bg-blue-50 text-blue-700{% endif %}"
+      >
+        <div class="flex">
+          <div class="flex-1">{{ message }}</div>
+          <button
+            type="button"
+            class="ml-4 text-gray-400 hover:text-gray-500"
+            onclick="this.parentElement.parentElement.remove()"
+          >
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      {% endfor %}
+
+      <!-- Books Table -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th
+                scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                ID
+              </th>
+              <th
+                scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Cover
+              </th>
+              <th
+                scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Title
+              </th>
+              <th
+                scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Author
+              </th>
+              <th
+                scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Status
+              </th>
+              <th
+                scope="col"
+                class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            {% if books %}
+              {% for book in books %}
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {{ book.id }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  {% if book.cover %}
+                  <img
+                    src="{{ book.cover.url }}"
+                    alt="{{ book.title }}"
+                    class="h-24 w-24 object-cover rounded"
+                  />
+                  {% else %}
+                  <div
+                    class="h-24 w-24 flex flex-col items-center justify-center bg-gray-100 rounded"
+                  >
+                    <i class="fas fa-image text-gray-400 text-xl"></i>
+                    <span class="text-xs text-gray-500 mt-1">No cover</span>
+                  </div>
+                  {% endif %}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {{ book.title }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {{ book.author|default:"-" }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span
+                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {% if book.available %}bg-green-100 text-green-800{% else %}bg-yellow-100 text-yellow-800{% endif %}"
+                  >
+                    {% if book.available %}Available{% else %}Checked Out{% endif %}
+                  </span>
+                </td>
+                <td
+                  class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium"
+                >
+                  <div class="flex justify-center space-x-2">
+                    <a
+                      href="{% url 'lvbook' book.pk %}"
+                      class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                    >
+                      View
+                    </a>
+                    <a
+                      href="{% url 'lebook' book.pk %}"
+                      class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                    >
+                      Edit
+                    </a>
+                    <a
+                      href="{% url 'ldbookk' book.pk %}"
+                      class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                    >
+                      Delete
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td
+                  colspan="6"
+                  class="px-6 py-4 text-center text-sm text-gray-500"
+                >
+                  No books available
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block javascripts %} {{ block.super }}
+<script>
+  // Auto-dismiss alerts after 5 seconds
+  document.querySelectorAll(".alert").forEach((alert) => {
+    setTimeout(() => {
+      alert.remove();
+    }, 5000);
+  });
+</script>
+{% endblock %}

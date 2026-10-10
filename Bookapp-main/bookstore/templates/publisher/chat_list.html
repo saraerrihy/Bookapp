@@ -1,0 +1,116 @@
+{% extends 'publisher/base.html' %} {% load static %} {% block title %}Group
+Chat | BookApp{% endblock %} {% block content %}
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-3xl mx-auto">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <!-- Chat Header -->
+      <div class="bg-primary text-white px-6 py-4">
+        <div class="flex justify-between items-center">
+          <h4 class="text-xl font-semibold">
+            <i class="fas fa-comments mr-2"></i>Group Chat
+          </h4>
+          <a
+            href="{% url 'ulchat' %}"
+            class="bg-white text-primary px-3 py-1 rounded-md text-sm font-medium hover:bg-gray-100 transition-colors"
+          >
+            <i class="fas fa-sync-alt mr-1"></i> Refresh
+          </a>
+        </div>
+      </div>
+
+      <!-- Chat Messages -->
+      <div class="p-6">
+        {% if object_list %}
+        <div class="chat-container max-h-[500px] overflow-y-auto pr-2">
+          {% for chat in object_list %}
+          <div
+            class="chat-message mb-4 p-4 rounded-lg shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1 {% if chat.user == request.user %}bg-primary text-white ml-auto{% else %}bg-gray-50{% endif %}"
+            style="max-width: 80%"
+          >
+            <div class="flex justify-between items-center mb-2">
+              <span class="font-semibold flex items-center">
+                <i
+                  class="fas {% if chat.user.is_superuser or chat.user.is_admin %}fa-shield-alt text-green-400 {% elif chat.user.is_librarian %}fa-book-reader text-red-400 {% else %}fa-user text-blue-400{% endif %} mr-2"
+                ></i>
+                {{ chat.user.username }}
+                <span
+                  class="ml-2 text-xs px-2 py-0.5 rounded-full {% if chat.user.is_superuser or chat.user.is_admin %}bg-green-100 text-green-800 {% elif chat.user.is_librarian %}bg-red-100 text-red-800 {% else %}bg-blue-100 text-blue-800{% endif %}"
+                >
+                  {% if chat.user.is_superuser or chat.user.is_admin %} Admin {%
+                  elif chat.user.is_librarian %} Librarian {% else %} Publisher
+                  {% endif %}
+                </span>
+              </span>
+              <small
+                class="{% if chat.user == request.user %}text-white/70{% else %}text-gray-500{% endif %} text-xs"
+              >
+                <i class="far fa-clock mr-1"></i> {{ chat.posted_at|timesince }}
+                ago
+              </small>
+            </div>
+
+            <div class="chat-content pl-3 whitespace-pre-wrap break-words">
+              {{ chat.message|linebreaks }}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-12 bg-gray-50 rounded-lg">
+          <i class="fas fa-comment-slash text-4xl text-gray-400 mb-3"></i>
+          <h4 class="text-xl font-medium text-gray-600 mb-2">
+            No Messages Yet
+          </h4>
+          <p class="text-gray-500">Be the first to start the conversation!</p>
+        </div>
+        {% endif %}
+
+        <!-- New Message Button -->
+        <div class="text-center mt-6">
+          <a
+            href="{% url 'ucchat' %}"
+            class="inline-flex items-center px-6 py-3 border border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors"
+          >
+            <i class="fas fa-plus mr-2"></i> New Message
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .chat-container {
+    scrollbar-width: thin;
+    scrollbar-color: #9ca3af #f3f4f6;
+  }
+
+  .chat-container::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .chat-container::-webkit-scrollbar-track {
+    background: #f3f4f6;
+  }
+
+  .chat-container::-webkit-scrollbar-thumb {
+    background-color: #9ca3af;
+    border-radius: 3px;
+  }
+</style>
+{% endblock %} {% block scripts %} {{ block.super }}
+<script>
+  // Auto-scroll to bottom of chat
+  document.addEventListener("DOMContentLoaded", function () {
+    const chatContainer = document.querySelector(".chat-container");
+    if (chatContainer) {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    // Auto-refresh every 30 seconds
+    setInterval(function () {
+      window.location.reload();
+    }, 30000);
+  });
+</script>
+{% endblock %}

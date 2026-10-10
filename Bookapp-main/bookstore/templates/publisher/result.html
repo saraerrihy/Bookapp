@@ -1,0 +1,136 @@
+{% extends 'publisher/base.html' %} {% load static %} {% block title %}Send
+Feedback | BookApp{% endblock %} {% block content %}
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-2xl mx-auto">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <!-- Feedback Header -->
+      <div class="bg-primary text-white px-6 py-4">
+        <h4 class="text-xl font-semibold">
+          <i class="fas fa-comment-dots mr-2"></i>Send Us Your Feedback
+        </h4>
+      </div>
+
+      <div class="p-6">
+        <!-- Feedback Form -->
+        <form
+          action="{% url 'send_feedback' %}"
+          method="POST"
+          class="space-y-6"
+        >
+          {% csrf_token %}
+
+          <div>
+            <label
+              for="feedbackTextarea"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Your Feedback</label
+            >
+            <textarea
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+              id="feedbackTextarea"
+              rows="5"
+              name="feedback"
+              placeholder="Please share your thoughts about our service..."
+              required
+            ></textarea>
+            <p class="mt-1 text-sm text-gray-500">
+              We value your opinion and will use it to improve our service
+            </p>
+          </div>
+
+          <!-- Feedback Type Selection -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Feedback Type</label
+            >
+            <div class="space-y-2">
+              <div class="flex items-center">
+                <input
+                  class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                  type="radio"
+                  name="feedback_type"
+                  id="suggestion"
+                  value="suggestion"
+                  checked
+                />
+                <label
+                  class="ml-2 block text-sm text-gray-700"
+                  for="suggestion"
+                >
+                  <i class="fas fa-lightbulb text-yellow-500 mr-1"></i>
+                  Suggestion
+                </label>
+              </div>
+              <div class="flex items-center">
+                <input
+                  class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                  type="radio"
+                  name="feedback_type"
+                  id="bug"
+                  value="bug"
+                />
+                <label class="ml-2 block text-sm text-gray-700" for="bug">
+                  <i class="fas fa-bug text-red-500 mr-1"></i> Bug Report
+                </label>
+              </div>
+              <div class="flex items-center">
+                <input
+                  class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                  type="radio"
+                  name="feedback_type"
+                  id="compliment"
+                  value="compliment"
+                />
+                <label
+                  class="ml-2 block text-sm text-gray-700"
+                  for="compliment"
+                >
+                  <i class="fas fa-heart text-green-500 mr-1"></i> Compliment
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Messages -->
+          {% for message in messages %}
+          <div
+            class="p-4 mb-4 rounded-md {% if message.tags == 'success' %}bg-green-100 text-green-800{% elif message.tags == 'error' %}bg-red-100 text-red-800{% elif message.tags == 'warning' %}bg-yellow-100 text-yellow-800{% else %}bg-blue-100 text-blue-800{% endif %}"
+          >
+            {{ message }}
+          </div>
+          {% endfor %}
+
+          <!-- Form Actions -->
+          <div class="flex justify-center space-x-4">
+            <button
+              type="submit"
+              class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center"
+            >
+              <i class="fas fa-paper-plane mr-2"></i>Send Feedback
+            </button>
+            <a
+              href="{% url 'publisher' %}"
+              class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors flex items-center"
+            >
+              <i class="fas fa-times mr-2"></i>Cancel
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block javascript %} {{ block.super }}
+<script>
+  // Auto-resize textarea as user types
+  document.addEventListener("DOMContentLoaded", function () {
+    const textarea = document.getElementById("feedbackTextarea");
+    if (textarea) {
+      textarea.addEventListener("input", function () {
+        this.style.height = "auto";
+        this.style.height = this.scrollHeight + "px";
+      });
+    }
+  });
+</script>
+{% endblock %}

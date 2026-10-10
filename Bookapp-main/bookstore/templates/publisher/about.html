@@ -1,0 +1,61 @@
+{% extends 'publisher/base.html' %} {% load static %} {% block title %}About Us
+| BookApp{% endblock %} {% block content %}
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <!-- Header -->
+      <div class="bg-primary text-white px-6 py-4">
+        <h1 class="text-2xl font-bold text-center">About Us</h1>
+      </div>
+
+      <!-- Content -->
+      <div class="p-6 space-y-6">
+        <div class="text-center">
+          <img
+            src="{% static 'images/logo.png' %}"
+            alt="BookApp Logo"
+            class="w-32 h-32 mx-auto mb-4"
+          />
+          <h2 class="text-xl font-semibold text-gray-800">
+            Welcome to BookApp
+          </h2>
+          <p class="text-gray-600 mt-2">
+            Your Digital Library Management Solution
+          </p>
+        </div>
+
+        <div class="prose max-w-none">
+          <p class="text-gray-700">
+            BookApp is a modern online library management system designed to
+            make book management and sharing easier than ever. Our platform
+            provides a seamless experience for publishers, readers, and book
+            enthusiasts.
+          </p>
+
+          <h3 class="text-lg font-semibold text-gray-800 mt-6">Our Mission</h3>
+          <p class="text-gray-700">
+            To revolutionize the way books are managed and shared in the digital
+            age, making literature accessible to everyone while providing
+            powerful tools for publishers and readers to connect.
+          </p>
+
+          <h3 class="text-lg font-semibold text-gray-800 mt-6">Key Features</h3>
+          <ul class="list-disc list-inside text-gray-700 space-y-2">
+            <li>Easy book management and organization</li>
+            <li>Secure file sharing and storage</li>
+            <li>Real-time chat and communication</li>
+            <li>User-friendly interface</li>
+            <li>Advanced search capabilities</li>
+          </ul>
+
+          <h3 class="text-lg font-semibold text-gray-800 mt-6">Contact Us</h3>
+          <p class="text-gray-700">
+            Have questions or suggestions? We'd love to hear from you! Use our
+            feedback form or reach out to our support team.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

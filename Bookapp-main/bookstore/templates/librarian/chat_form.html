@@ -1,0 +1,78 @@
+{% extends 'librarian/base.html' %} {% load static %} {% block title %}New
+Message | BookApp{% endblock %} {% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="bg-white shadow rounded-lg overflow-hidden">
+    <div class="px-4 py-5 sm:px-6 bg-primary">
+      <div class="flex items-center">
+        <i class="fas fa-comment-alt text-white mr-2"></i>
+        <h3 class="text-lg font-medium text-white">New Message</h3>
+      </div>
+    </div>
+
+    <div class="px-4 py-5 sm:p-6">
+      <form method="POST" class="space-y-6">
+        {% csrf_token %}
+
+        <div>
+          <label
+            for="id_content"
+            class="block text-sm font-medium text-gray-700"
+            >Message</label
+          >
+          <div class="mt-1">
+            <textarea
+              id="id_content"
+              name="content"
+              rows="4"
+              required
+              class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md"
+              placeholder="Type your message here..."
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="flex justify-end space-x-3">
+          <a
+            href="{% url 'llchat' %}"
+            class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          >
+            <i class="fas fa-times mr-2"></i>
+            Cancel
+          </a>
+          <button
+            type="submit"
+            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          >
+            <i class="fas fa-paper-plane mr-2"></i>
+            Send Message
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block javascripts %} {{ block.super }}
+<script>
+  // Auto-scroll to bottom of chat messages
+  const messagesContainer = document.querySelector(".chat-messages");
+  if (messagesContainer) {
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+
+  // Refresh messages every 5 seconds
+  setInterval(function () {
+    fetch(window.location.href)
+      .then((response) => response.text())
+      .then((html) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const newMessages = doc.querySelector(".chat-messages");
+        if (newMessages && document.querySelector(".chat-messages")) {
+          document.querySelector(".chat-messages").innerHTML =
+            newMessages.innerHTML;
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+      });
+  }, 5000);
+</script>
+{% endblock %}

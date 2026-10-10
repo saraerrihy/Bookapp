@@ -1,0 +1,120 @@
+{% extends 'publisher/base.html' %} {% load static %} {% block title %}Book
+Library | BookApp{% endblock %} {% block content %}
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-800">Book Library</h1>
+      <a
+        href="{% url 'uabook_form' %}"
+        class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center"
+      >
+        <i class="fas fa-plus mr-2"></i> Add New Book
+      </a>
+    </div>
+
+    <!-- Book Grid -->
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
+    >
+      {% for book in books %}
+      <div
+        class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+      >
+        <!-- Book Cover -->
+        <div class="h-48 bg-gray-200 flex items-center justify-center">
+          {% if book.cover %}
+          <img
+            src="{{ book.cover.url }}"
+            alt="{{ book.title }}"
+            class="h-full w-auto object-contain"
+          />
+          {% else %}
+          <div class="flex items-center justify-center">
+            <i class="fas fa-book text-3xl text-gray-400"></i>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Book Info -->
+        <div class="p-4">
+          <h3 class="text-base font-semibold text-gray-800 mb-2 truncate">
+            {{ book.title }}
+          </h3>
+          <p class="text-sm text-gray-600 mb-2 truncate">
+            by {{ book.author }}
+          </p>
+          <p class="text-sm text-gray-500 mb-3">
+            {{ book.published_date|date:"Y" }}
+          </p>
+
+          <!-- Action Buttons -->
+          <div class="flex justify-between">
+            {% if book.pdf_file %}
+            <a
+              href="{{ book.pdf_file.url }}"
+              class="text-primary hover:text-primary/80"
+              title="Download PDF"
+              download
+            >
+              <i class="fas fa-eye text-lg"></i>
+            </a>
+            {% else %}
+            <span
+              class="text-gray-400 cursor-not-allowed"
+              title="No PDF available"
+            >
+              <i class="fas fa-eye text-lg"></i>
+            </span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div
+        class="col-span-full text-center py-12 bg-white rounded-lg shadow-sm"
+      >
+        <i class="fas fa-books text-4xl text-gray-400 mb-3"></i>
+        <h4 class="text-xl font-medium text-gray-600 mb-2">
+          No Books Available
+        </h4>
+        <p class="text-gray-500">
+          Start by adding your first book to the library.
+        </p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <div class="flex justify-center mt-8">
+      <nav class="inline-flex rounded-md shadow">
+        {% if page_obj.has_previous %}
+        <a
+          href="?page={{ page_obj.previous_page_number }}"
+          class="px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+        >
+          Previous
+        </a>
+        {% endif %}
+
+        <span
+          class="px-3 py-2 border border-gray-300 bg-primary text-white text-sm font-medium"
+        >
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+        <a
+          href="?page={{ page_obj.next_page_number }}"
+          class="px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+        >
+          Next
+        </a>
+        {% endif %}
+      </nav>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

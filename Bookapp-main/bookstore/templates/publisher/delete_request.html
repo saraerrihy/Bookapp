@@ -1,0 +1,81 @@
+{% extends 'publisher/base.html' %} {% load static %} {% block title %}Delete
+Request | BookApp{% endblock %} {% block content %}
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-3xl mx-auto">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <!-- Header -->
+      <div class="bg-primary text-white px-6 py-4">
+        <h1 class="text-2xl font-bold text-center">Request Book Deletion</h1>
+      </div>
+
+      <!-- Content -->
+      <div class="p-6">
+        <div class="mb-6">
+          <h2 class="text-xl font-semibold text-gray-800 mb-2">
+            Book Information
+          </h2>
+          <p class="text-gray-600">
+            Please provide a reason for requesting the deletion of this book.
+          </p>
+        </div>
+
+        <form method="post" class="space-y-4">
+          {% csrf_token %}
+
+          <div>
+            <label
+              for="book"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Select Book</label
+            >
+            <select
+              name="book"
+              id="book"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+            >
+              <option value="">Choose a book...</option>
+              {% for book in books %}
+              <option value="{{ book.id }}">
+                {{ book.title }} by {{ book.author }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div>
+            <label
+              for="reason"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Reason for Deletion</label
+            >
+            <textarea
+              name="reason"
+              id="reason"
+              rows="4"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+              placeholder="Please explain why you want to delete this book..."
+            ></textarea>
+          </div>
+
+          <div class="flex justify-end space-x-4">
+            <a
+              href="{% url 'publisher' %}"
+              class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+            >
+              Cancel
+            </a>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            >
+              Submit Request
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

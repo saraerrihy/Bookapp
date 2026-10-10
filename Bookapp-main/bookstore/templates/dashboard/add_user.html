@@ -1,0 +1,419 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookApp - Inscription</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #f8f9fc;
+            --accent-color: #2e59d9;
+            --text-color: #5a5c69;
+            --light-gray: #f8f9fa;
+            --success-color: #1cc88a;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .app-title {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 700;
+            font-size: 2.5rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .app-title i {
+            margin-right: 15px;
+        }
+        
+        .register-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            transition: transform 0.3s ease;
+        }
+        
+        .register-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            color: white;
+            padding: 1.8rem;
+            text-align: center;
+            border-bottom: none;
+        }
+        
+        .card-header h3 {
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        
+        .card-body {
+            padding: 2.5rem;
+            background: white;
+        }
+        
+        .input-group-text {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 45px;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+        
+        .form-control {
+            border-left: none;
+            padding: 12px 15px;
+            height: auto;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+            border-color: var(--primary-color);
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 12px 20px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            border-radius: 8px;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 89, 217, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            padding: 12px 20px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            border-radius: 8px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+        }
+        
+        .card-footer {
+            background: var(--secondary-color);
+            border-top: none;
+            padding: 1.2rem;
+            text-align: center;
+        }
+        
+        .alert-message {
+            font-size: 0.9rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            margin-bottom: 0;
+            border-left: 4px solid #e74a3b;
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 1.5rem;
+        }
+        
+        .btn-container .btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .password-strength {
+            margin-top: 0.5rem;
+            height: 5px;
+            background: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .strength-bar {
+            height: 100%;
+            width: 0;
+            background: #e74a3b;
+            transition: all 0.3s;
+        }
+        
+        .password-requirements {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-color);
+        }
+        
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.3rem;
+        }
+        
+        .requirement i {
+            margin-right: 5px;
+            font-size: 0.7rem;
+        }
+        
+        .valid {
+            color: var(--success-color);
+        }
+        
+        .invalid {
+            color: #e74a3b;
+        }
+        
+        @media (max-width: 576px) {
+            .card-body {
+                padding: 1.5rem;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <h1 class="app-title"><i class="fas fa-book-open"></i>BookApp</h1>
+                <div class="register-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-user-plus me-2"></i>Créer un compte</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'register' %}" id="registerForm">
+                            {% csrf_token %}
+                            <div class="mb-4">
+                                <label for="username" class="form-label">Nom d'utilisateur</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="Entrez votre nom d'utilisateur" required>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="email" class="form-label">Adresse email</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Entrez votre email" required>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Mot de passe</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Créez un mot de passe" required>
+                                </div>
+                                <div class="password-strength">
+                                    <div class="strength-bar" id="strengthBar"></div>
+                                </div>
+                                <div class="password-requirements">
+                                    <div class="requirement" id="lengthReq">
+                                        <i class="fas fa-circle"></i>
+                                        <span>8 caractères minimum</span>
+                                    </div>
+                                    <div class="requirement" id="numberReq">
+                                        <i class="fas fa-circle"></i>
+                                        <span>Au moins 1 chiffre</span>
+                                    </div>
+                                    <div class="requirement" id="specialReq">
+                                        <i class="fas fa-circle"></i>
+                                        <span>Au moins 1 caractère spécial</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="confirmPassword" class="form-label">Confirmer le mot de passe</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirmez votre mot de passe" required>
+                                </div>
+                                <div id="passwordMatch" class="text-small" style="display:none; color: var(--success-color);">
+                                    <i class="fas fa-check-circle"></i> Les mots de passe correspondent
+                                </div>
+                                <div id="passwordMismatch" class="text-small" style="display:none; color: #e74a3b;">
+                                    <i class="fas fa-times-circle"></i> Les mots de passe ne correspondent pas
+                                </div>
+                            </div>
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                                <label class="form-check-label" for="termsCheck">
+                                    J'accepte les <a href="#" style="color: var(--primary-color);">conditions d'utilisation</a>
+                                </label>
+                            </div>
+                            <div class="btn-container">
+                                <button type="submit" name="sign-up" class="btn btn-primary" id="submitBtn" disabled>
+                                    <i class="fas fa-user-plus me-2"></i>S'inscrire
+                                </button>
+                                <a href="{% url 'home' %}" class="btn btn-secondary">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Connexion
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        {% if messages %}
+                            <div class="messages">
+                                {% for message in messages %}
+                                    <div class="alert alert-danger alert-message" role="alert">
+                                        <i class="fas fa-exclamation-circle me-2"></i>{{ message }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script>
+    $(document).ready(function() {
+        // Vérification de la force du mot de passe
+        $('#password').on('input', function() {
+            const password = $(this).val();
+            let strength = 0;
+            
+            // Vérification des exigences
+            const hasLength = password.length >= 8;
+            const hasNumber = /\d/.test(password);
+            const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+            
+            // Mise à jour des icônes
+            updateRequirement('lengthReq', hasLength);
+            updateRequirement('numberReq', hasNumber);
+            updateRequirement('specialReq', hasSpecial);
+            
+            // Calcul de la force
+            if (hasLength) strength += 1;
+            if (hasNumber) strength += 1;
+            if (hasSpecial) strength += 1;
+            
+            // Mise à jour de la barre de force
+            updateStrengthBar(strength);
+            
+            // Vérification de la correspondance des mots de passe
+            checkPasswordMatch();
+        });
+        
+        // Vérification de la correspondance des mots de passe
+        $('#confirmPassword').on('input', checkPasswordMatch);
+        
+        // Activation du bouton de soumission si toutes les conditions sont remplies
+        $('input').on('input', checkFormValidity);
+        $('#termsCheck').change(checkFormValidity);
+        
+        function updateRequirement(id, isValid) {
+            const element = $('#' + id);
+            element.find('i').removeClass('fa-circle').addClass(isValid ? 'fa-check-circle valid' : 'fa-times-circle invalid');
+            element.find('span').css('color', isValid ? 'var(--success-color)' : '#e74a3b');
+        }
+        
+        function updateStrengthBar(strength) {
+            const $bar = $('#strengthBar');
+            let color, width;
+            
+            switch(strength) {
+                case 0:
+                    width = '0%';
+                    color = '#e74a3b';
+                    break;
+                case 1:
+                    width = '33%';
+                    color = '#e74a3b';
+                    break;
+                case 2:
+                    width = '66%';
+                    color = '#f6c23e';
+                    break;
+                case 3:
+                    width = '100%';
+                    color = '#1cc88a';
+                    break;
+            }
+            
+            $bar.css({
+                'width': width,
+                'background-color': color
+            });
+        }
+        
+        function checkPasswordMatch() {
+            const password = $('#password').val();
+            const confirmPassword = $('#confirmPassword').val();
+            
+            if (password && confirmPassword) {
+                if (password === confirmPassword) {
+                    $('#passwordMatch').show();
+                    $('#passwordMismatch').hide();
+                } else {
+                    $('#passwordMatch').hide();
+                    $('#passwordMismatch').show();
+                }
+            } else {
+                $('#passwordMatch').hide();
+                $('#passwordMismatch').hide();
+            }
+        }
+        
+        function checkFormValidity() {
+            const password = $('#password').val();
+            const confirmPassword = $('#confirmPassword').val();
+            const termsChecked = $('#termsCheck').is(':checked');
+            const isValid = password && confirmPassword && (password === confirmPassword) && termsChecked;
+            
+            $('#submitBtn').prop('disabled', !isValid);
+        }
+    });
+    </script>
+</body>
+</html>

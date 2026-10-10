@@ -1,0 +1,94 @@
+{% extends 'librarian/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 mb-3">
+            <div id="content-wrapper">
+                <div class="container-fluid">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="">Book Title: {{ object.title }}</a>
+                        </li>
+                    </ol>
+                    
+                    <div class="card mb-3">
+                        <div class="card-header bg-primary text-white">
+                            <i class="fas fa-book"></i>
+                            Book Details
+                        </div>
+                        <div class="card-body">
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <strong>Title:</strong> {{ object.title }}
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Author:</strong> {{ object.author }}
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Description:</strong> 
+                                            <p>{{ object.desc }}</p>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Uploaded By:</strong> {{ object.uploaded_by.get_full_name|default:object.uploaded_by.username }}
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Upload Date:</strong> {{ object.upload_date|date:"F j, Y" }}
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Status:</strong> 
+                                            <span class="badge {% if object.available %}bg-success{% else %}bg-danger{% endif %}">
+                                                {% if object.available %}Available{% else %}Checked Out{% endif %}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-4">
+                                    {% if object.cover_image %}
+                                    <img src="{{ object.cover_image.url }}" class="img-fluid rounded mb-3" alt="Book Cover">
+                                    {% else %}
+                                    <div class="text-center py-5 bg-light rounded">
+                                        <i class="fas fa-book fa-5x text-muted"></i>
+                                        <p class="mt-2">No Cover Image</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <a href="{% url 'lmbook' %}" class="btn btn-secondary">
+                                        <i class="fas fa-arrow-left"></i> Back to List
+                                    </a>
+                                    {% if user.is_staff or user == object.uploaded_by %}
+                                    <a href="{% url 'book_update' object.id %}" class="btn btn-warning">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a href="{% url 'book_delete' object.id %}" class="btn btn-danger">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                    {% endif %}
+                                    {% if object.book_file %}
+                                    <a href="{{ object.book_file.url }}" class="btn btn-primary" download>
+                                        <i class="fas fa-download"></i> Download
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
